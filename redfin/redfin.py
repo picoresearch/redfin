@@ -3,11 +3,12 @@ import json
 
 
 class Redfin:
-    def __init__(self):
+    def __init__(self, user_agent_header='redfin', proxies=None,):
         self.base = 'https://redfin.com/stingray/'
         self.user_agent_header = {
-            'user-agent': 'redfin'
+            'user-agent': user_agent_header
         }
+        self.proxies = proxies
 
     def meta_property(self, url, kwargs, page=False):
         if page:
@@ -19,7 +20,10 @@ class Redfin:
 
     def meta_request(self, url, kwargs):
         response = requests.get(
-            self.base + url, params=kwargs, headers=self.user_agent_header)
+            self.base + url,
+            params=kwargs,
+            headers=self.user_agent_header,
+            proxies=self.proxies)
         response.raise_for_status()
         return json.loads(response.text[4:])
 
